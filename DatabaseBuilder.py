@@ -1,5 +1,5 @@
 from BrickTools import Parser, Pallete, BrickEditor
-
+from shutil import make_archive, rmtree, unpack_archive
 #import BrickTools.find_structures
 #from BrickTools import findStructures
 import h5py
@@ -9,9 +9,13 @@ import os
 #add http_request part
 #compress folder
 #set function 
+
+
+
 def create(name, aesthetic, x, y,z, set_function=True):
     # Path to entities folder
     # data are pictures, .npy files, .json output
+    compress=True
     aesth_data_path="Bricks_DB/"+aesthetic+"_data/"
     #create aeshtetic entity folder if it doesn't exist
     if(os.path.exists(aesth_data_path)==False):
@@ -41,10 +45,92 @@ def create(name, aesthetic, x, y,z, set_function=True):
     editor=BrickEditor()
     editor.create_world(stl, entity_path, trash, render_mode="string")
     if(set_function==True):
-        label(stl)
+        with open('function_types.txt','r') as f:
+            r=f.read()
+            room_functions=ast.literal_eval(r)
+        label(stl, room_functions)
+    
+    if(compress==True):
+        zip_file=zip(entity_path)
+        stl.attrs["zip_file"]=zip_file
+    stl.attrs["cords"]=(x, y, z)
     """just save dict as string, >>>  ast.literal_eval(s) for dict"""
-def label(stl):
+def zip(entity_path):
+
+    make_archive(entity_path, 'zip', entity_path)
+    rmtree(entity_path)
+    zip_file=entity_path[:-1]
+    zip_file=zip_file+".zip"
+    return zip_file
+def label(stl, room_functions):
     print(stl.name)
+    structures_group=stl["Structures"]
+    for s_key in structures_group.keys():
+        struct=structures_group[s_key]
+        print(s_key)
+        all_rooms=[]
+        for l_key in struct.keys():
+            lvl=struct[l_key]
+            lvl_func=lvl.attrs["function"]
+            
+            if(lvl_func!="multi_top"):
+                print(l_key)
+                for r_key in lvl.keys():
+                    print(r_key)
+                    room=lvl[r_key]
+                    print_str=room.attrs["print_string"]
+                    print(print_str)
+                    print("Aesthetic blocks:")
+                    print(room.attrs["aesthetic_pallete"])
+                    print("Function blocks:")
+                    print(room.attrs["function_pallete"])
+                    res=label_room(room_functions)
+                    room.attrs["function"]=res
+                    all_rooms.append(res)
+            else:
+                print("exluding roof: "+l_key)
+        print(struct.attrs["print_string"])
+        print("Room functions:")
+        print(all_rooms)
+        res=label_struct()
+        struct.attrs["function"]=res
+def label_struct():
+        structure_functions=["tiny_house", "house", "inn", "forge", "castle", "hospital", "shop"]
+        while(True):
+            tag=input("Structure Function>")
+            if(tag=="th"):
+                return "tiny_house"
+            elif(tag=="h"):
+                return "house"
+            elif(tag=="m"):
+                return "mansion"
+            elif(tag not in structure_functions):
+                print("Room function "+str(tag)+" has not been used yet. Do you want to add it to room functions? (Y/N)")
+                yn=input(">")
+                if(yn=="Y" or yn=="y"):
+                    structure_functions.append(tag)
+                    return tag
+                else:
+                    print("Try again")
+            else:
+                return tag
+def label_room(room_functions):
+        while(True):
+            tag=input("Room Function>")
+            if(tag=="bd"):
+                return "bed_room"
+            elif(tag=="e"):
+                return "empty"
+            elif(tag not in room_functions):
+                print("Room function "+str(tag)+" has not been used yet. Do you want to add it to room functions? (Y/N)")
+                yn=input(">")
+                if(yn=="Y" or yn=="y"):
+                    room_functions.append(tag)
+                    return tag
+                else:
+                    print("Try again")
+            else:
+                return tag
 def create_settlement_db(name, aesthetic, pallete):
     #connect to database, create if database doesnt exist 
     db_str="Bricks_DB/"+aesthetic+".hdf5"

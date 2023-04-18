@@ -8,8 +8,11 @@ def zip_entitys(entity_path):
     
     dir = entity_path
     #zipfile.ZipFile(dir, "w")
-    make_archive(dir, 'zip', dir)
-    rmtree(dir)
+    make_archive(entity_path, 'zip', entity_path)
+    rmtree(entity_path)
+    zip_file=entity_path[:-1]
+    zip_file=zip_file+".zip"
+    return zip_file
     #add zip to settlement attributes
 #zip_entitys("Bricks_DB/test_data/2_houses_0wools.448_data/")
 

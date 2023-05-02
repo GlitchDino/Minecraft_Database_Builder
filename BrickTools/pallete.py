@@ -709,6 +709,7 @@ class Pallete:
             "damaged_anvil",
             "brewing_stand",
             "cauldron",
+            "water_cauldron",
             "barrel",
             "smoker",
             "blast_furnace",
@@ -1051,6 +1052,7 @@ class Pallete:
             "sculk_sensor"
             "lever",
             "tripwire_hook",
+            "tripwire",
         ]
         self.ice=[
             "snow",

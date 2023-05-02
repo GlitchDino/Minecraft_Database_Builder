@@ -7,23 +7,29 @@ import ast
 import os
 
 #add http_request part
-#compress folder
-#set function 
+#add room iding for roofs/multi_top
 
 
-
-def create(name, aesthetic, x, y,z, set_function=True):
+def create(name, aesthetic, x, y,z, set_function=True, ref_pallete=True):
     # Path to entities folder
     # data are pictures, .npy files, .json output
     compress=True
     aesth_data_path="Bricks_DB/"+aesthetic+"_data/"
+    count_input=True
+    #testing feature
+    if(count_input==True):
+        count=get_count()
+        stl_name_inc=name+"."+str(count)
+    else:
+        stl_name_inc=name
+    entity_path=aesth_data_path+stl_name_inc+"_data/"
     #create aeshtetic entity folder if it doesn't exist
     if(os.path.exists(aesth_data_path)==False):
         os.mkdir(aesth_data_path)
     #create entity folder
-    count=get_count()
-    stl_name_inc=name+"."+str(count)
-    entity_path=aesth_data_path+stl_name_inc+"_data/"
+    
+
+
     os.mkdir(entity_path)
     #pull json file with http
 
@@ -37,8 +43,22 @@ def create(name, aesthetic, x, y,z, set_function=True):
     block_count=parser.block_count
     
     #parse blocks, returns pallete (all blocks in Settlement)
-    
-    pallete, trash=create_pallete(all_blocks)
+    if(ref_pallete==True):
+        ref_str="./"+name+"_pallete_ref.txt"
+        if(os.path.exists(ref_pallete)==False):
+            print("THAT HAPPENED")
+            pallete, trash=create_pallete(all_blocks)
+            with open(ref_str, "w") as f:
+                pallete_string=str(pallete)
+                f.write(pallete_string)
+        else:
+            with open(ref_str, "r") as f:
+                r=f.read()
+                pallete = ast.literal_eval(r)
+                print(pallete)
+                trash = get_trash(pallete)
+    else:
+        pallete, trash=create_pallete(all_blocks)
     db, stl=create_settlement_db(stl_name_inc, aesthetic, pallete)
     stl.attrs["file"]=settlement_arr_p
     stl.attrs["total_blocks"]=block_count
@@ -55,6 +75,13 @@ def create(name, aesthetic, x, y,z, set_function=True):
         stl.attrs["zip_file"]=zip_file
     stl.attrs["cords"]=(x, y, z)
     """just save dict as string, >>>  ast.literal_eval(s) for dict"""
+def get_trash(pallete):
+    trash_list=[]
+    for key in pallete.keys():
+        if(pallete[key]=="trash"):
+            trash_list.append(pallete[key])
+    return trash_list
+
 def zip(entity_path):
 
     make_archive(entity_path, 'zip', entity_path)
@@ -173,10 +200,11 @@ def create_pallete(pallete):
             pallete_tag_dict[id]="aesthetic"
         elif id in function:
             pallete_tag_dict[id]="function"
+    
     return pallete_tag_dict, trash_list
 
 
-def pallete_prompt(id, assume_trash=True):
+def pallete_prompt(id, assume_trash=False):
     if(assume_trash==True):
         return "trash"
     print('Acceptable input:\ns="structure"\na="aesthetic"\nf="function"\nt="trash"')
@@ -202,4 +230,4 @@ def get_count():
         f.write(str(count))
     return count
 
-create("2_houses_0wools", "test",0,0,0)
+create("medival1_part1", "medival",-22,71,-175)

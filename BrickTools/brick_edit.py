@@ -5,7 +5,7 @@ import ast
 from .find_structures import findStructures
 from .print_array import printArray
 from .find_exterior import findExterior
-from .find_levels import findLevels
+from .find_levels_original import findLevels
 from .find_rooms import findRooms
 from .np_to_printstring import np2string
 #LATER:
@@ -20,7 +20,6 @@ from .np_to_printstring import np2string
 #Tommorow:
 #compress
 #before charlie::
-#build function checker
 #add total buildings count to db
 #test: pulling arrays from dataset/other maps
 #build 10,000 datapoints
@@ -321,8 +320,11 @@ class BrickEditor:
     def save_all_arrays_to_database(self):
         for structure in self.settlement.structures:
             structure_s=self.entity_path+structure.structure_name
+            ext_arr=structure.exterior_arr
             s_str=structure_s+".npy"
-            np.save(structure_s, structure.np_arr)
+            e_str=structure_s+"_ext.npy"
+            np.save(s_str, structure.np_arr)
+            np.save(e_str, ext_arr)
             structure.struct_group.attrs["file"]=s_str
             for level in structure.levels:
                 level_s=structure_s+"_"+level.level_name

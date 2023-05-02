@@ -202,4 +202,4 @@ def get_count():
         f.write(str(count))
     return count
 
-create("2_houses_0wools", "test",0,0,0)
+create("Settlement1", "test",0,0,0)

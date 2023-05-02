@@ -122,6 +122,10 @@ class Structure:
     def create_levels(self, level_cords):
         cord_count=len(level_cords) 
         level_count=0
+        printArray(self.np_arr)
+        print("Here are the level cords we detected, are these correct? [Y/N]")
+        print(level_cords)
+        response=input(">")
         if(cord_count==1):
             level_function="single_level"
             level_name="Level_0"
@@ -163,6 +167,8 @@ class Level:
         self.level_group=level_group
         self.rooms=[]
         self.room_count=0
+
+        self.double_check=True
 
     def print_level(self):
         bottom, top = self.cords[0], self.cords[1]
@@ -275,7 +281,7 @@ class Room:
                         if(block_id not in self.aesthetic_pallete):
                             self.aesthetic_pallete.append(block_id)
 class BrickEditor:
-    def __init__(self, search_id="door"):
+    def __init__(self, search_id="door", double_check=True):
         self.map_p=None
         self.settlement_name=None
         self.is_connected=[]
@@ -289,6 +295,7 @@ class BrickEditor:
     #render_mode decides wether we save pictures, models, etc
     def create_world(self, stl, entity_path, trash, render_mode=None): 
         print("Created world")
+        input_test=input("DID THIS WORK?")
         self.stl=stl
         self.entity_path=entity_path #folder to save .npy, .png, .dat
         self.trash = trash

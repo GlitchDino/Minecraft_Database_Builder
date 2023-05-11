@@ -19,37 +19,37 @@ class Parser():
         self.block_count=0
         self.parse()
     def parse_file(self):
-        blocks_array=[]
-        id_array=[] #list of all unique ids for pallete searching
-        with open(self.input) as json_file:
-            data = json.load(json_file)
-        for block in data:
-            id=block['id'].split("minecraft:")[1]
-            if(id!='air'):
-                self.block_count+=1
-            if id not in id_array:
-                id_array.append(id)
-            x=block['x']
-            y=block['y']
-            z=block['z']
-            state=block['state']
-            data=block['data']
-            
-            if(len(data)==2):
-                data=None
-            if(not state):
-                state=None
-            if(self.verbose==True):
-                print(block)
-                print("ID: "+id)
-                print("x: "+str(x))
-                print("y: "+str(y))
-                print("z: "+str(z))
-                print("State:"+str(state))
-                print("Data: "+str(data))
-            blocks_array.append(Block(id, x, y, z, state, data))
-        self.blocks=blocks_array 
-        self.block_ids=id_array
+            blocks_array=[]
+            id_array=[] #list of all unique ids for pallete searching
+            for file in self.input:
+                with open(file) as json_file:
+                    data = json.load(json_file)
+                for block in data:
+                    id=block['id'].split("minecraft:")[1]
+                    if(id!='air'):
+                        self.block_count+=1
+                    if id not in id_array:
+                        id_array.append(id)
+                    x=block['x']
+                    y=block['y']
+                    z=block['z']
+                    state=block['state']
+                    data=block['data']
+                    if(len(data)==2):
+                        data=None
+                    if(not state):
+                        state=None
+                    if(self.verbose==True):
+                        print(block)
+                        print("ID: "+id)
+                        print("x: "+str(x))
+                        print("y: "+str(y))
+                        print("z: "+str(z))
+                        print("State:"+str(state))
+                        print("Data: "+str(data))
+                    blocks_array.append(Block(id, x, y, z, state, data))
+            self.blocks=blocks_array 
+            self.block_ids=id_array
 
     def init_map_array(self):
         lowest_x=self.blocks[0].x

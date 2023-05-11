@@ -121,15 +121,18 @@ class findLevels:
                 r_z=self.calc_z(np_symbol[y], ext_symbol[y])
                 z_t=0
                 x_t=0
-                for item in r_z:
-                    if(item==True):
-                        z_t+=1
-                for item in r_x:
-                    if(item==True):
-                        x_t+=1
-                if(z_t>4 or x_t>4):
-                    self.test_maybe(y, np_symbol)
-                    maybe.append(y)
+                if(type(r_z)!=list):
+                    pass
+                else:
+                    for item in r_z:
+                        if(item==True):
+                            z_t+=1
+                    for item in r_x:
+                        if(item==True):
+                            x_t+=1
+                    if(z_t>4 or x_t>4):
+                        self.test_maybe(y, np_symbol)
+                        maybe.append(y)
                     #test maybe
                     
         for y in maybe:

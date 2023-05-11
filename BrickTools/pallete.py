@@ -34,7 +34,6 @@ class Pallete:
         self.sand=[
             "sand",
             "red_sand",
-            "gravel",
             "clay",
             "terracotta",
         ]
@@ -666,8 +665,72 @@ class Pallete:
             "creeper_wall_head",
             "dragon_wall_head",
         ]
-
-        self.aestheticArray=[self.decorativeBlocks, self.decortiveUseBlocks, self.banner, self.wall_banner,self.trapdoor,self.carpet,self.candle,self.pot,self.skulls]
+        self.plant_block=[
+            "dried_kelp_block",
+            "cactus",
+            "sponge",
+            "wet_sponge",
+            "brown_mushroom_block",
+            "red_mushroom_block",
+            "mushroom_stem",
+            "pumpkin",
+            "attached_pumpkin_stem",
+            "pumpkin_stem",
+            "melon",
+        ]
+        self.plant=[
+            "kelp_plant",
+            "lily_pad",
+            "bamboo",
+            "sweet_berry_bush",
+            "sugar_cane",
+            "kelp",
+            "big_dripleaf",
+            "small_dripleaf",
+            "weeping_vines_plant",
+            "twisting_vines_plant",
+            "budding_amethyst",
+            "large_amethyst_bud",
+            "medium_amethyst_bud",
+            "small_amethyst_bud",
+            "sea_pickle",   
+            "azalea",
+            "budding_amethyst",
+            "brown_mushroom",
+            "red_mushroom",  
+            "flowering_azalea",     
+        ]
+        self.flower=[
+            "dandelion",
+            "poppy",
+            "blue_orchid",
+            "allium",
+            "azure_bluet",
+            "red_tulip",
+            "orange_tulip",
+            "white_tulip",
+            "pink_tulip",
+            "chorus_plant",
+            "chorus_flower",
+            "cornflower",
+            "lily_of_the_valley",
+            "wither_rose",
+            "crimson_fungus",
+            "warped_fungus",
+            "crimson_roots",
+            "warped_roots",
+            "nether_sprouts",
+            "sunflower",
+            "lilac",
+            "rose_bush",
+            "peony",
+            "oxeye_daisy",
+            "wheat",
+            "carrots",
+            "potatoes",
+            "beetroots",
+        ]
+        self.aestheticArray=[self.plant, self.plant_block, self.flower, self.decorativeBlocks, self.decortiveUseBlocks, self.banner, self.wall_banner,self.trapdoor,self.carpet,self.candle,self.pot,self.skulls]
         
         #Function
         self.lights=[
@@ -709,6 +772,7 @@ class Pallete:
             "damaged_anvil",
             "brewing_stand",
             "cauldron",
+            "water_cauldron",
             "barrel",
             "smoker",
             "blast_furnace",
@@ -834,7 +898,8 @@ class Pallete:
             "deepslate",
             "dripstone_block",
             "pointed_dripstone",
-            "tuff"
+            "tuff",
+            "gravel",
         ]
         self.ore=[
             "gold_ore",
@@ -859,39 +924,6 @@ class Pallete:
             "raw_gold_block",
             "raw_iron_block",
 
-        ]
-        self.plant_block=[
-            "dried_kelp_block",
-            "cactus",
-            "sponge",
-            "wet_sponge",
-            "brown_mushroom_block",
-            "red_mushroom_block",
-            "mushroom_stem",
-            "pumpkin",
-            "melon",
-        ]
-        self.plant=[
-            "kelp_plant",
-            "lily_pad",
-            "bamboo",
-            "sweet_berry_bush",
-            "sugar_cane",
-            "kelp",
-            "big_dripleaf",
-            "small_dripleaf",
-            "weeping_vines_plant",
-            "twisting_vines_plant",
-            "budding_amethyst",
-            "large_amethyst_bud",
-            "medium_amethyst_bud",
-            "small_amethyst_bud",
-            "sea_pickle",   
-            "azalea",
-            "budding_amethyst",
-            "brown_mushroom",
-            "red_mushroom",  
-            "flowering_azalea",     
         ]
         self.spawner=[
             "spawner"
@@ -922,36 +954,7 @@ class Pallete:
             "clock",
             "writable_book",
         ]
-        self.flower=[
-            "dandelion",
-            "poppy",
-            "blue_orchid",
-            "allium",
-            "azure_bluet",
-            "red_tulip",
-            "orange_tulip",
-            "white_tulip",
-            "pink_tulip",
-            "chorus_plant",
-            "chorus_flower",
-            "cornflower",
-            "lily_of_the_valley",
-            "wither_rose",
-            "crimson_fungus",
-            "warped_fungus",
-            "crimson_roots",
-            "warped_roots",
-            "nether_sprouts",
-            "sunflower",
-            "lilac",
-            "rose_bush",
-            "peony",
-            "oxeye_daisy",
-            "wheat",
-            "carrots",
-            "potatoes",
-            "beetroots",
-        ]
+
         self.states=[
             "nether_portal",
             "end_portal",
@@ -1051,6 +1054,7 @@ class Pallete:
             "sculk_sensor"
             "lever",
             "tripwire_hook",
+            "tripwire",
         ]
         self.ice=[
             "snow",
@@ -1065,7 +1069,7 @@ class Pallete:
             "lava"
         ]
         
-        self.magicArray=[self.naturalStone, self.ore, self.plant, self.plant_block,self.spawner,self.items, self.flower, self.states, self.coral_block, self.dead_coral_block, self.coral, self.dead_coral, self.coral_fan, self.dead_coral_fan, self.dead_coral_wall_fan, self.coral_wall_fan, self.redStone, self.ice, self.fluids]
+        self.magicArray=[self.naturalStone, self.ore, self.spawner,self.items, self.states, self.coral_block, self.dead_coral_block, self.coral, self.dead_coral, self.coral_fan, self.dead_coral_fan, self.dead_coral_wall_fan, self.coral_wall_fan, self.redStone, self.ice, self.fluids]
 
         #"crying_obsidian",
         self.netherNatural=[

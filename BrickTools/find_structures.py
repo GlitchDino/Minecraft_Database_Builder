@@ -14,23 +14,47 @@ class Block:
       self.is_searched=is_searched
 
 class findStructures:
-    def __init__(self, struct, settlement_map, search_list, trash_list, entity_path, verbose=False):
+    def __init__(self, struct, settlement_map,  building_search_list, house_search_list, trash_list, entity_path, verbose=False):
         self.struct=struct
         self.settlement_map=settlement_map
-        self.search_list=search_list
+        self.building_search_list=building_search_list
+        self.house_search_list=house_search_list
+        self.house_files=[]
+        self.building_files=[]
         self.entity_path=entity_path
         self.trash=trash_list#edit this to pallete list
         self.is_connected=[]
         self.houses=[]
+        self.buildings=[]
         self.structures=[]
+        self.f_houses, self.f_buildings = [], []
         self.building_count=0
 
     def wool(self):
-        for search_item in self.search_list:
+        for search_item in self.house_search_list:
+            print("WOOOLLL")
+            print(search_item.id)
             self.is_connected.append(search_item)
-            self.scan()
+            self.house_scan()
 
-    def scan(self):
+        for search_item in self.building_search_list:
+            self.is_connected.append(search_item)
+            self.building_scan()
+    def building_scan(self):
+        buildingArr=[]
+        while self.is_connected:
+            block=self.is_connected.pop(0)
+            if(block.is_searched==False):
+                buildingArr.append(block)
+                block.is_searched=True
+                self.check_block(block)
+        self.buildings.append(buildingArr)
+        #removes double wools, so if two wools are in same building we dont search again
+        for cord in buildingArr:
+            if cord in self.building_search_list:
+                self.building_search_list.remove(cord)
+
+    def house_scan(self):
         houseArr=[]
         while self.is_connected:
             block=self.is_connected.pop(0)
@@ -39,9 +63,10 @@ class findStructures:
                 block.is_searched=True
                 self.check_block(block)
         self.houses.append(houseArr)
-        for cord in houseArr:
-            if cord in self.search_list:
-                self.search_list.remove(cord)
+        #removes double wools, so if two wools are in same building we dont search again
+        #for cord in houseArr:
+         #   if cord in self.house_search_list:
+          #      self.house_search_list.remove(cord)
 
     def check_block(self, block):
         #check z
@@ -85,8 +110,12 @@ class findStructures:
                 if(neighbor.is_searched!=True):
                     self.is_connected.append(neighbor)
     #builds arrays of houses
-    def buildStructArrays(self):
-        for houseArr in self.houses:
+    def buildStructArrays(self, type):
+        if(type=="house"):
+            arr=self.houses
+        elif(type=="building"):
+            arr=self.buildings
+        for houseArr in arr:
             if(len(houseArr)>0):
 
                 #find area of structure 
@@ -133,13 +162,14 @@ class findStructures:
                             if(block==None):
                                 structArr[y][z][x]=Block("air", x, y, z, None, None, "trash")
 
-                self.saveStruct(structArr)
+                self.saveStruct(structArr, type)
 
-    def saveStruct(self, array):
+    def saveStruct(self, array, type):
         max_y=len(array)
         max_z=len(array[0])
         max_x=len(array[0][0])
-
+        print("here")
+        print(max_y, max_z, max_x)
         structure=numpy.empty((max_y, max_z, max_x), dtype=object)
         for y in range(0, max_y):
             for z in range(0, max_z):
@@ -147,17 +177,26 @@ class findStructures:
                     block=array[y][z][x]
                     dat=(block.id, block.state, block.data, block.type)
                     structure[y][z][x]=dat
-        save=self.entity_path+"Building"+str(self.building_count)+".npy"
+        if(type=="house"):
+            save=self.entity_path+"House"+str(self.building_count)+".npy"
+            self.house_files.append(structure)
+            #self.f_houses.append(ar)
+
+        elif(type=="building"):
+            save=self.entity_path+"Building"+str(self.building_count)+".npy"
+            self.building_files.append(structure)
+            
         print("Saving Settlement Structure "+str(self.building_count)+" to "+save)
         self.building_count+=1
         #numpy.save(save, structure)
-        self.structures.append(structure)
+        
 
     def find_buildings(self):
         self.max_y=len(self.settlement_map)
         self.max_z=len(self.settlement_map[0])
         self.max_x=len(self.settlement_map[0][0])
         self.wool()
-        self.buildStructArrays()
-        return self.structures
+        self.buildStructArrays("house")
+        self.buildStructArrays("building")
+        return self.house_files, self.building_files
     

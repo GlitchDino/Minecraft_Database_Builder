@@ -86,7 +86,12 @@ class Structure:
         self.entity_path=entity_path
         self.struct_group=struct_group
         self.max_y=len(self.np_arr)
+        print(self.max_y)
+        print("herebreak??")
+        printArray(self.np_arr)
         self.max_z=len(self.np_arr[0])
+        
+        print(self.max_z)
         self.max_x=len(self.np_arr[0][0])
         self.totalBlocks=self.max_x*self.max_z*self.max_y
         self.xzArea=self.max_x*self.max_z
@@ -120,12 +125,31 @@ class Structure:
         self.create_levels(level_cords)
 
     def create_levels(self, level_cords):
-        cord_count=len(level_cords) 
-        level_count=0
+
         printArray(self.np_arr)
         print("Here are the level cords we detected, are these correct? [Y/N]")
         print(level_cords)
         response=input(">")
+        while(response!="y"):
+            print("are these cords correct?")
+            print(level_cords)
+            response=input(">")
+            if(response=="n"):
+                print("Type correct y cords for floors(use spaces to split)")
+                new_cord=input(">")
+                all_cords=new_cord.split(" ")
+                t_cords=[]
+                for c in all_cords:
+                    t_cords.append(int(c))
+                level_cords=[]
+                for i in range(1, len(t_cords)):
+                    bottom=t_cords[i-1]
+                    top=t_cords[i]
+                    level_cord=(bottom, top)                
+                    level_cords.append(level_cord)
+
+        cord_count=len(level_cords) 
+        level_count=0
         if(cord_count==1):
             level_function="single_level"
             level_name="Level_0"
@@ -281,13 +305,16 @@ class Room:
                         if(block_id not in self.aesthetic_pallete):
                             self.aesthetic_pallete.append(block_id)
 class BrickEditor:
-    def __init__(self, search_id="door", double_check=True):
+    def __init__(self, search_id_house="lime_wool", search_id_building="cyan_wool", double_check=True):
         self.map_p=None
         self.settlement_name=None
         self.is_connected=[]
         self.settlement_arr=[]
-        self.search_id=search_id # item to be use as search 4 house point
-        self.search_list=[]
+        self.search_id_house=search_id_house # item to be use as search 4 house point
+        self.search_id_building=search_id_building
+        self.house_search_list=[]
+        self.building_search_list=[]
+        self.buildings=[]
         self.arrStructP=[]
         self.ban_list=["dirt", "grass_block", "air"] #edit this to pallete list
         self.building_count=0
@@ -305,10 +332,11 @@ class BrickEditor:
         self.structs=self.stl.create_group("Structures")
         
         self.init_blocks()
-        fs=findStructures(self.structs, self.settlement_arr, self.search_list, self.trash, entity_path)
-        buildings=fs.find_buildings()
-        self.structs.attrs["count"]=len(buildings)
-        self.init_settlement(buildings)
+        fs=findStructures(self.structs, self.settlement_arr, self.building_search_list, self.house_search_list, self.trash, entity_path)
+        houses, buildings=fs.find_buildings()
+        print(len(houses), len(buildings))
+        self.structs.attrs["count"]=len(houses)
+        self.init_settlement(houses)
         self.settlement.find_all_levels()
         self.settlement.find_all_rooms()
         if(render_mode=="string"):
@@ -372,9 +400,13 @@ class BrickEditor:
                 for x in range(0, self.max_x): 
                     id_str=array[y][z][x][0]
                     type=self.pallete[id_str]
-                    if(self.search_id in id_str):
+                    if(self.search_id_house in id_str):
                         block=Block(id_str, x,y,z, array[y][z][x][1],array[y][z][x][2], type)
-                        self.search_list.append(block)
+                        self.house_search_list.append(block)
+                        #print("HAPPENEDED")
+                    if(self.search_id_building in id_str):
+                        block=Block(id_str, x,y,z, array[y][z][x][1],array[y][z][x][2], type)
+                        self.building_search_list.append(block)
                     else:
                         block=Block(id_str, x,y,z, array[y][z][x][1],array[y][z][x][2], type)
                     self.settlement_arr[y][z][x]=block

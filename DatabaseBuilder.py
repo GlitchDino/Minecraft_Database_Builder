@@ -12,7 +12,7 @@ import os
 
 
 
-def create(name, aesthetic, x, y,z, set_function=True):
+def create(name, files, aesthetic, x, y,z, set_function=True):
     # Path to entities folder
     # data are pictures, .npy files, .json output
     compress=True
@@ -27,12 +27,13 @@ def create(name, aesthetic, x, y,z, set_function=True):
     os.mkdir(entity_path)
     #pull json file with http
 
-    json_file=name+".txt"
+    #json_file=name+".txt"
     
-
+    
     #returns all unique blocks in Settlement, save Settlement as .npy file under settlement_arr_p
     settlement_arr_p=entity_path+name+".npy"
-    parser=Parser(json_file, settlement_arr_p)
+    
+    parser=Parser(files, settlement_arr_p)
     all_blocks=parser.block_ids
     block_count=parser.block_count
     
@@ -176,7 +177,7 @@ def create_pallete(pallete):
     return pallete_tag_dict, trash_list
 
 
-def pallete_prompt(id, assume_trash=True):
+def pallete_prompt(id, assume_trash=False):
     if(assume_trash==True):
         return "trash"
     print('Acceptable input:\ns="structure"\na="aesthetic"\nf="function"\nt="trash"')
@@ -202,4 +203,5 @@ def get_count():
         f.write(str(count))
     return count
 
-create("Settlement1", "test",0,0,0)
+create("Example_Settlement",["Example_Settlement.txt"], "ExampleAesthetic", 0,0,0)
+#create("MEDIVAL1",["MEDIVAL1_p1.txt", "MEDIVAL1_p2.txt", "MEDIVAL1_p3.txt"], "medival",0,0,0)
